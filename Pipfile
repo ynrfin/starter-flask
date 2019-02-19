@@ -9,6 +9,8 @@ flask-sqlalchemy = "*"
 flask-user = "*"
 flask-migrate = "*"
 python-dotenv = "*"
+flask-wtf = "*"
+flask-bcrypt = "*"
 
 [dev-packages]
 

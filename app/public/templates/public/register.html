@@ -1,0 +1,11 @@
+{% from "macros/_formhelpers.html" import render_field %}
+this is register html
+
+<form method="POST">
+    {{form.csrf_token}}
+    {{ render_field(form.name, size=20) }} </br>
+    {{ render_field(form.username, size=20) }} </br>
+    {{ render_field(form.password, size=20) }}</br>
+    {{ render_field(form.password_repeat, size=20) }}</br>
+    <input type="submit" value="Register" />
+</form>

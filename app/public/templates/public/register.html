@@ -1,11 +1,16 @@
 {% from "macros/_formhelpers.html" import render_field %}
-this is register html
+{% extends "base.html" %}
 
-<form method="POST">
-    {{form.csrf_token}}
-    {{ render_field(form.name, size=20) }} </br>
-    {{ render_field(form.username, size=20) }} </br>
-    {{ render_field(form.password, size=20) }}</br>
-    {{ render_field(form.password_repeat, size=20) }}</br>
-    <input type="submit" value="Register" />
-</form>
+{% block content %}
+    <h3>Register</h3>
+    <hr>
+    <form method="POST">
+        {{form.csrf_token}}
+        {{ render_field(form.name, size=20, class="form-control col-md-10") }} </br>
+        {{ render_field(form.username, size=20, class="form-control col-md-10") }} </br>
+        {{ render_field(form.password, size=20, class="form-control col-md-10") }}</br>
+        {{ render_field(form.password_repeat, size=20, class="form-control
+        col-md-10") }}</br>
+        <input type="submit" value="Register" class="btn btn-primary"/>
+    </form>
+{% endblock %}

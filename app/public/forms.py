@@ -9,3 +9,7 @@ class RegisterForm(FlaskForm):
         Length(min=6)])
     password_repeat = PasswordField('Repeat Password',
             validators=[DataRequired(), Length(min=6)])
+
+class LoginForm(FlaskForm):
+    username = StringField('Username', validators=[DataRequired()])
+    password = PasswordField('Username', validators=[DataRequired()])

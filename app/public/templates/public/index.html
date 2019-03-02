@@ -6,5 +6,19 @@
     {% if current_user.is_authenticated %}
         Hello , {{current_user.fullname}}
     {% endif  %}
+    {% with messages= get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-primary alert-dismissable fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert"
+                        aria-label="close"> <span aria-hidden='true'>&times;</span>
+                    </button>
+                </div>
+            {% endfor %}
+        
+        {% endif %}
+    {% endwith %}
+    
         
 {% endblock %}

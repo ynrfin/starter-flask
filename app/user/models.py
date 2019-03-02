@@ -8,6 +8,7 @@ class User(db.Model):
     fullname = db.Column(db.String, nullable=False)
     password = db.Column(db.String, nullable=False)
     authenticated = db.Column(db.Boolean, default=False)
+    reset_password_token = db.Column(db.String)
 
     def is_active():
         '''True, as all users are active'''

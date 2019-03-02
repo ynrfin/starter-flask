@@ -1,0 +1,13 @@
+{% from "macros/_formhelpers.html" import render_field %}
+{% extends "base.html" %}
+
+{% block content %}
+    <h3>Login</h3>
+    <form action="" method="post">
+        {{form.csrf_token}}
+        {{render_field(form.username, class="form-control col-md-10")}}
+        {{render_field(form.password, class="form-control col-md-10")}}
+        <input type="submit" name="Login" id="Login" value="Login" class="btn
+        btn-primary">
+    </form>
+{% endblock %}

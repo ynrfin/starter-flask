@@ -1,11 +1,13 @@
-from flask import Blueprint, render_template, redirect, url_for
+from flask import Blueprint, render_template, redirect, url_for, flash
 from flask_mail import Message
 
 from app.user.models import User
 from app.extensions import login_manager, bcrypt, db, mail
 from flask_login import login_user
-from .forms import RegisterForm, LoginForm
+from .forms import RegisterForm, LoginForm, ForgotPasswordForm
 import pprint
+from itsdangerous import URLSafeSerializer
+from app.config import Config
 
 bp = Blueprint('public', __name__, template_folder='templates/public')
 
@@ -44,3 +46,20 @@ def login():
                 return redirect(url_for('public.index'))
     return render_template('login.html', form=form)
 
+@bp.route('/forgot-password', methods=['POST', 'GET'])
+def forgot_password():
+    form = ForgotPasswordForm()
+    if(form.validate_on_submit()):
+        user = User.query.filter_by(username=form.username.data).first()
+        if user is not None:
+            s = URLSafeSerializer(Config.SECRET_KEY)
+            user.reset_password_token = s.dumps([user.id, user.password])
+            db.session.commit()
+            flash("We have send a link to reset your password. Please check your email")
+            ## TODO use flash to inform
+
+            return redirect(url_for('public.index'))
+        else:
+            flash('no user found')
+            return redirect(url_for('public.index'))
+    return render_template('reset-password.html', form=form)

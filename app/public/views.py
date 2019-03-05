@@ -1,11 +1,13 @@
-from flask import Blueprint, render_template, redirect, url_for, flash
+from flask import Blueprint, render_template, redirect, url_for, flash, request
 from flask_mail import Message
 
 from app.user.models import User
 from app.extensions import login_manager, bcrypt, db, mail
 from flask_login import login_user
 from .forms import RegisterForm, LoginForm, ForgotPasswordForm
-import pprint
+from .forms import ResetPasswordForm
+ResetPasswordForm
+from pprint import pprint
 from itsdangerous import URLSafeSerializer
 from app.config import Config
 
@@ -55,11 +57,39 @@ def forgot_password():
             s = URLSafeSerializer(Config.SECRET_KEY)
             user.reset_password_token = s.dumps([user.id, user.password])
             db.session.commit()
+            reset_link= url_for('public.reset_password',
+                    token=user.reset_password_token)
+            email_message = '''Hello, you have requested a reset password token.
+            Ignore this if you do not think you requested one.
+            <a href="{}"> {}</a>'''
+            email_message = email_message.format(reset_link,
+                    reset_link)
+            return email_message
+            msg = Message(email_message, sender="yourapp@mail.com", recipients=['mygmart1@gmail.com'])
+            mail.send(msg)
             flash("We have send a link to reset your password. Please check your email")
-            ## TODO use flash to inform
 
             return redirect(url_for('public.index'))
         else:
             flash('no user found')
             return redirect(url_for('public.index'))
-    return render_template('reset-password.html', form=form)
+    return render_template('forgot-password.html', form=form)
+
+@bp.route('/reset-password', methods=['GET', 'POST'])
+def reset_password(token=None):
+    token = request.args.get('token') or None
+    if token is not None:
+        user = User.query.filter_by(reset_password_token=token).first()
+        if user is not None:
+            form = ResetPasswordForm()
+            if form.validate_on_submit():
+                user.password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+                user.reset_password_token = None
+                db.session.commit()
+                flash("Password Changed")
+                return redirect(url_for('public.index'))
+            return render_template('reset-password.html', form=form,
+                username= user.username)
+        flash('Token not found, please request new token')
+        return redirect(url_for('public.index'))
+    return 'no token'

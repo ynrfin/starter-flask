@@ -16,3 +16,10 @@ class LoginForm(FlaskForm):
 
 class ForgotPasswordForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
+    
+class ResetPasswordForm(FlaskForm):
+    username = StringField('username')
+    password = PasswordField('Password', validators=[DataRequired(),
+        Length(min=6)])
+    password_repeat = PasswordField('Repeat Password',
+            validators=[DataRequired(), Length(min=6)])

@@ -1,6 +1,6 @@
 from flask import Flask
 
-from app.extensions import db, migrate, login_manager, bcrypt
+from app.extensions import db, migrate, login_manager, bcrypt, mail
 from app import user, public
 from app.config import DevConfig
 from app.user.models import User
@@ -27,6 +27,7 @@ def register_extensions(app):
     migrate.init_app(app, db)
     login_manager.init_app(app)
     bcrypt.init_app(app)
+    mail.init_app(app)
 
 def register_blueprint(app_par):
     app_par.register_blueprint(public.views.bp, url_prefix="/")

@@ -3,7 +3,7 @@ from flask_mail import Message
 
 from app.user.models import User
 from app.extensions import login_manager, bcrypt, db, mail
-from flask_login import login_user
+from flask_login import login_user, logout_user
 from .forms import RegisterForm, LoginForm, ForgotPasswordForm
 from .forms import ResetPasswordForm
 ResetPasswordForm
@@ -93,3 +93,9 @@ def reset_password(token=None):
         flash('Token not found, please request new token')
         return redirect(url_for('public.index'))
     return 'no token'
+
+@bp.route('/logout')
+def logout():
+    logout_user()
+    flash('Logged OUT')
+    return redirect(url_for('public.index'))
